@@ -29,6 +29,10 @@ app.use(cors());
 // Configure body-parser middleware
 app.use(bodyParser.json());
 
+// Configure passport middleware
+require("./config/passport")(passport);
+app.use(passport.initialize());
+
 // Configure static directory
 app.use(express.static(path.join(__dirname, "../client/dist")));
 

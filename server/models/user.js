@@ -27,11 +27,18 @@ UserSchema.pre("save", function(next) {
   }
 });
 
-UserSchema.statics.findByUsername = (username, done) => {
+UserSchema.statics.findByUsername = function(username, done) {
   this.findOne({ username: username }, (err, user) => {
-    if (err)   { throw err; }
+    if (err)   { return done(err, false); }
     if (!user) { return done(null, false); }
     done(null, user);
+  });
+};
+
+UserSchema.methods.comparePassword = function(password, done) {
+  bcrypt.compare(password, this.password, (err, isMatch) => {
+    if (err) { return done(err); }
+    done(null, isMatch);
   });
 };
 

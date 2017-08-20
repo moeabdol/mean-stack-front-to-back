@@ -1,9 +1,11 @@
 const passport = require("passport");
-const jwt = require("jsonwebtoken");
+const jwt      = require("jsonwebtoken");
 
 const User = require("../models/user");
 
-const registerUser = (req, res) => {
+const config = require("../config");
+
+const register = (req, res) => {
   if (!req.body.email || !req.body.username || !req.body.password) {
     return res.status(400).json({
       message: "Please provide valid email, username, and password" });
@@ -26,16 +28,49 @@ const registerUser = (req, res) => {
   });
 };
 
-const authenticateUser = (req, res) => {
-  res.send("authenticate");
+const authenticate = (req, res) => {
+  if (!req.body.email || !req.body.username || !req.body.password) {
+    return res.status(400).json({
+      message: "Please provide valid email, username, and password" });
+  }
+
+  User.findByUsername(req.body.username, (err, user) => {
+    if (err) throw err;
+    if (!user) return res.status(400).json({
+      message: "User not found!"
+    });
+
+    user.comparePassword(req.body.password, (err, isMatch) => {
+      if (err) throw err;
+      if (isMatch) {
+        const token = jwt.sign(user, config.secret, {
+          expiresIn: 604800   // In seconds
+        });
+
+        res.status(200).json({
+          token: "JWT " + token,
+          user: {
+            name: user.name,
+            username: user.username,
+            email: user.email
+          }
+        });
+      } else {
+        res.status(403).json({
+          message: "Authentication failed! Password didn't match." });
+      }
+    });
+  });
 };
 
-const getProfile = (req, res) => {
-  res.send("profile");
+const profile = (req, res) => {
+  res.status(200).json({
+    user: req.user
+  });
 };
 
 module.exports = {
-  registerUser,
-  authenticateUser,
-  getProfile
+  register,
+  authenticate,
+  profile
 };

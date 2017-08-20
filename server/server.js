@@ -7,15 +7,30 @@ const mongoose   = require("mongoose");
 
 const app = express();
 
+const config = require("./config");
+
 const usersRoutes = require("./routes/users");
 
 const port = 3000;
+
+// Configure and connect to database
+mongoose.Promise = global.Promise;
+mongoose.connect(config.db, { useMongoClient: true }, (err) => {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log("Connected to database " + config.db);
+  }
+});
 
 // Enable all CORS requests
 app.use(cors());
 
 // Configure body-parser middleware
 app.use(bodyParser.json());
+
+// Configure static directory
+app.use(express.static(path.join(__dirname, "../client/dist")));
 
 // Configure routes
 app.use("/users", usersRoutes);

@@ -3,11 +3,28 @@ const bcrypt   = require("bcryptjs");
 
 const config = require("../config");
 
+const SALT_FACTOR = 10;
+
 const UserSchema = mongoose.Schema({
   name:     { type: String },
   email:    { type: String, required: true, unique: true },
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true }
+});
+
+UserSchema.pre("save", function(next) {
+  const user = this;
+  if (this.isModified("password" || this.isNew)) {
+    bcrypt.genSalt(SALT_FACTOR, (err, salt) => {
+      bcrypt.hash(user.password, salt, (err, hash) => {
+        if (err) { return next(err); }
+        user.password = hash;
+        next();
+      });
+    });
+  } else {
+    next();
+  }
 });
 
 UserSchema.statics.findByUsername = (username, done) => {

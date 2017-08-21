@@ -34,7 +34,7 @@ require("./config/passport")(passport);
 app.use(passport.initialize());
 
 // Configure static directory
-app.use(express.static(path.join(__dirname, "../client/dist")));
+app.use(express.static(path.join(__dirname, "public")));
 
 // Configure routes
 app.use("/users", usersRoutes);

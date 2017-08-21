@@ -1,8 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt   = require("bcryptjs");
 
-const config = require("../config");
-
 const SALT_FACTOR = 10;
 
 const UserSchema = mongoose.Schema({
@@ -26,6 +24,8 @@ UserSchema.pre("save", function(next) {
     next();
   }
 });
+
+UserSchema.index({ email: 1, username: 1 }, { unique: true });
 
 UserSchema.statics.findByUsername = function(username, done) {
   this.findOne({ username: username }, (err, user) => {

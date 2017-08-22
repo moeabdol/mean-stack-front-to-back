@@ -12,7 +12,7 @@ import { AuthenticationService } from "../../services/authentication.service";
 })
 export class NavbarComponent implements OnInit {
   constructor(
-    private _authenticationService: AuthenticationService,
+    public _authenticationService: AuthenticationService,
     private _router: Router,
     private _flashMessages: FlashMessagesService) { }
 

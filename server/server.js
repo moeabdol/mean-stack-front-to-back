@@ -39,8 +39,8 @@ app.use(express.static(path.join(__dirname, "public")));
 // Configure routes
 app.use("/users", usersRoutes);
 
-app.get("/", (req, res) => {
-  res.send("Invalid endpoint");
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "public/index.html"));
 });
 
 app.listen(port, () => {

@@ -15,4 +15,18 @@ export class AuthenticationService {
     return this._http.post("http://localhost:3000/users/register", user,
       { headers: headers }).map(res => res.json());
   }
+
+  authenticateUser(user) {
+    const headers = new Headers();
+    headers.append("Content-Type", "application/json");
+    return this._http.post("http://localhost:3000/users/authenticate", user,
+      { headers: headers }).map(res => res.json());
+  }
+
+  storeUserData(data) {
+    localStorage.setItem("id_token", data.token);
+    localStorage.setItem("user", JSON.stringify(data.user));
+    this.authToken = data.token;
+    this.user = data.user;
+  }
 }

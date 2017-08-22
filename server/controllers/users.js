@@ -1,5 +1,4 @@
-const passport = require("passport");
-const jwt      = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 
 const User = require("../models/user");
 
@@ -29,7 +28,7 @@ const register = (req, res) => {
 };
 
 const authenticate = (req, res) => {
-  if (!req.body.email || !req.body.username || !req.body.password) {
+  if (!req.body.username || !req.body.password) {
     return res.status(400).json({
       message: "Please provide valid email, username, and password" });
   }

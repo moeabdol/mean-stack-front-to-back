@@ -23,11 +23,24 @@ export class AuthenticationService {
       { headers: headers }).map(res => res.json());
   }
 
+  getProfile() {
+    const headers = new Headers();
+    this.loadToken();
+    headers.append("Authorization", this.authToken);
+    headers.append("Content-Type", "application/json");
+    return this._http.get("http://localhost:3000/users/profile",
+      { headers: headers }).map(res => res.json());
+  }
+
   storeUserData(data) {
     localStorage.setItem("id_token", data.token);
     localStorage.setItem("user", JSON.stringify(data.user));
     this.authToken = data.token;
     this.user = data.user;
+  }
+
+  loadToken() {
+    this.authToken = localStorage.getItem("id_token");
   }
 
   logout() {

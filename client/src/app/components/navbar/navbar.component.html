@@ -18,19 +18,23 @@
 			</ul>
 
 			<ul class="nav navbar-nav navbar-right">
-				<li [routerLinkActive]="['active']">
+				<li *ngIf="_authenticationService.loggedIn()"
+          [routerLinkActive]="['active']">
 				  <a [routerLink]="['/profile']">Profile</a>
         </li>
-				<li [routerLinkActive]="['active']">
+				<li *ngIf="_authenticationService.loggedIn()"
+          [routerLinkActive]="['active']">
 				  <a [routerLink]="['/dashboard']">Dashboard</a>
         </li>
-				<li [routerLinkActive]="['active']">
+				<li *ngIf="!_authenticationService.loggedIn()"
+          [routerLinkActive]="['active']">
 				  <a [routerLink]="['/login']">Login</a>
         </li>
-				<li [routerLinkActive]="['active']">
+				<li *ngIf="!_authenticationService.loggedIn()"
+          [routerLinkActive]="['active']">
 				  <a [routerLink]="['/register']">Register</a>
         </li>
-				<li>
+				<li *ngIf="_authenticationService.loggedIn()">
 				  <a (click)="onLogoutClick()" href="#">Logout</a>
         </li>
 			</ul>
